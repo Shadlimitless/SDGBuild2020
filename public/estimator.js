@@ -40,7 +40,7 @@ submitData.addEventListener('click', function (e) {
   var result = document.getElementById('results');
   var tableElem = document.getElementById('data-table');
   // eslint-disable-next-line valid-typeof
-  if ((typeof tableElem === 'undefined' ? 'undefined' : _typeof(tableElem)) != undefined && tableElem != null) {
+  if ((typeof tableElem === 'undefined' ? 'undefined' : _typeof(tableElem)) !== undefined && tableElem != null) {
     tableElem.parentNode.removeChild(tableElem);
   }
   result.appendChild(createTable(estimateData));
@@ -97,8 +97,24 @@ var covid19ImpactEstimator = function covid19ImpactEstimator(data) {
   // Object that will hold response data
   var responseObj = {
     data: data,
-    impact: {},
-    severeImpact: {}
+    impact: {
+      currentlyInfected: 0,
+      infectionsByRequestedTime: 0,
+      severeCasesByRequestedTime: 0,
+      hospitalBedsByRequestedTime: 0,
+      casesForICUByRequestedTime: 0,
+      casesForVentilatorsByRequestedTime: 0,
+      dollarsInFlight: 0
+    },
+    severeImpact: {
+      currentlyInfected: 0,
+      infectionsByRequestedTime: 0,
+      severeCasesByRequestedTime: 0,
+      hospitalBedsByRequestedTime: 0,
+      casesForICUByRequestedTime: 0,
+      casesForVentilatorsByRequestedTime: 0,
+      dollarsInFlight: 0
+    }
   };
   responseObj.impact.currentlyInfected = responseObj.data.reportedCases * 10;
   responseObj.severeImpact.currentlyInfected = responseObj.data.reportedCases * 50;
@@ -114,8 +130,6 @@ var covid19ImpactEstimator = function covid19ImpactEstimator(data) {
   responseObj.severeImpact.casesForVentilatorsByRequestedTime = calculateVentilatorCases(responseObj.severeImpact.casesForICUByRequestedTime);
   responseObj.impact.dollarsInFlight = calculateDollarsInFlight(responseObj.data.periodType, responseObj.data.timeToElapse, responseObj.data.region.avgDailyIncomePopulation, responseObj.data.region.avgDailyIncomeInUSD, responseObj.impact.infectionsByRequestedTime);
   responseObj.severeImpact.dollarsInFlight = calculateDollarsInFlight(responseObj.data.periodType, responseObj.data.timeToElapse, responseObj.data.region.avgDailyIncomePopulation, responseObj.data.region.avgDailyIncomeInUSD, responseObj.severeImpact.infectionsByRequestedTime);
-
-  console.log('running' + JSON.stringify(responseObj));
   return responseObj;
 };
 
@@ -135,8 +149,6 @@ var createTable = function createTable(responseObj) {
   tableRow.appendChild(dataHeader);
   tHead.appendChild(tableRow);
   table.appendChild(tHead);
-  var dataKeys = Object.keys(responseObj);
-  console.log(dataKeys);
   var data = responseObj.data,
       impact = responseObj.impact,
       severeImpact = responseObj.severeImpact;
@@ -146,13 +158,13 @@ var createTable = function createTable(responseObj) {
   createTd(impact, tBody);
   createTd(severeImpact, tBody);
   table.appendChild(tBody);
-  table.setAttribute("id", "data-table");
+  table.setAttribute('id', 'data-table');
   return table;
 };
 
 var createTd = function createTd(input, tdBody) {
-  // eslint-disable-next-line no-plusplus
   var respData = Object.keys(input);
+  // eslint-disable-next-line no-plusplus
   for (var i = 0; i < respData.length; i++) {
     var tdRow = document.createElement('tr');
     var dtLabel = document.createElement('td');
@@ -164,5 +176,3 @@ var createTd = function createTd(input, tdBody) {
     tdBody.appendChild(tdRow);
   }
 };
-
-// export default covid19ImpactEstimator;

@@ -89,8 +89,24 @@ const covid19ImpactEstimator = (data) => {
   // Object that will hold response data
   const responseObj = {
     data,
-    impact: {},
-    severeImpact: {}
+    impact: {
+      currentlyInfected: 0,
+      infectionsByRequestedTime: 0,
+      severeCasesByRequestedTime: 0,
+      hospitalBedsByRequestedTime: 0,
+      casesForICUByRequestedTime: 0,
+      casesForVentilatorsByRequestedTime: 0,
+      dollarsInFlight: 0
+    },
+    severeImpact: {
+      currentlyInfected: 0,
+      infectionsByRequestedTime: 0,
+      severeCasesByRequestedTime: 0,
+      hospitalBedsByRequestedTime: 0,
+      casesForICUByRequestedTime: 0,
+      casesForVentilatorsByRequestedTime: 0,
+      dollarsInFlight: 0
+    }
   };
   responseObj.impact.currentlyInfected = (responseObj.data.reportedCases * 10);
   responseObj.severeImpact.currentlyInfected = (responseObj.data.reportedCases * 50);
