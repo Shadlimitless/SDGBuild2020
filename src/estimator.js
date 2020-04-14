@@ -10,7 +10,7 @@ const submitData = document.getElementById('data-go-estimate');
 
 // Create data object
 
-const constructData=(periodType, timeToElapse, reportedCases, population, totalHospitalBeds)=>{
+const constructData = (periodType, timeToElapse, reportedCases, population, totalHospitalBeds) => {
   const conData = {
     region: {
       name: 'Africa',
@@ -29,15 +29,15 @@ const constructData=(periodType, timeToElapse, reportedCases, population, totalH
 
 submitData.addEventListener('click', (e) => {
   e.preventDefault();
-  const inputData = constructData(periodTypeData.value, timeToElapseData.value, reportCasesData.value,
-    populationData.value, totalHospitalBedsData.value);
+  const inputData = constructData(periodTypeData.value, timeToElapseData.value,
+    reportCasesData.value, populationData.value, totalHospitalBedsData.value);
   const estimateData = covid19ImpactEstimator(inputData);
   // eslint-disable-next-line no-console
   console.log(`found data${JSON.stringify(inputData)}`);
   const result = document.getElementById('results');
   const tableElem = document.getElementById('data-table');
   // eslint-disable-next-line valid-typeof
-  if(typeof(tableElem)!= undefined && tableElem != null) {
+  if (typeof (tableElem) !== undefined && tableElem != null) {
     tableElem.parentNode.removeChild(tableElem);
   }
   result.appendChild(createTable(estimateData));
@@ -95,10 +95,12 @@ const covid19ImpactEstimator = (data) => {
   responseObj.impact.currentlyInfected = (responseObj.data.reportedCases * 10);
   responseObj.severeImpact.currentlyInfected = (responseObj.data.reportedCases * 50);
   responseObj.impact.infectionsByRequestedTime = calculateInfectionsByTime(
-    responseObj.data.periodType, responseObj.data.timeToElapse, responseObj.data.population, responseObj.impact.currentlyInfected
+    responseObj.data.periodType, responseObj.data.timeToElapse,
+    responseObj.data.population, responseObj.impact.currentlyInfected
   );
   responseObj.severeImpact.infectionsByRequestedTime = calculateInfectionsByTime(
-    responseObj.data.periodType, responseObj.data.timeToElapse, responseObj.data.population, responseObj.severeImpact.currentlyInfected
+    responseObj.data.periodType, responseObj.data.timeToElapse,
+    responseObj.data.population, responseObj.severeImpact.currentlyInfected
   );
   responseObj.impact.severeCasesByRequestedTime = calculateSevereCases(
     responseObj.impact.infectionsByRequestedTime
@@ -106,16 +108,34 @@ const covid19ImpactEstimator = (data) => {
   responseObj.severeImpact.severeCasesByRequestedTime = calculateSevereCases(
     responseObj.severeImpact.infectionsByRequestedTime
   );
-  responseObj.impact.hospitalBedsByRequestedTime = calculcateRequestedBeds(responseObj.impact.severeCasesByRequestedTime, data.totalHospitalBeds);
-  responseObj.severeImpact.hospitalBedsByRequestedTime = calculcateRequestedBeds(responseObj.severeImpact.severeCasesByRequestedTime, data.totalHospitalBeds);
-  responseObj.impact.casesForICUByRequestedTime = calculatecasesForICU(responseObj.impact.infectionsByRequestedTime);
-  responseObj.severeImpact.casesForICUByRequestedTime = calculatecasesForICU(responseObj.severeImpact.infectionsByRequestedTime);
-  responseObj.impact.casesForVentilatorsByRequestedTime = calculateVentilatorCases(responseObj.impact.casesForICUByRequestedTime);
-  responseObj.severeImpact.casesForVentilatorsByRequestedTime = calculateVentilatorCases(responseObj.severeImpact.casesForICUByRequestedTime);
-  responseObj.impact.dollarsInFlight = calculateDollarsInFlight(responseObj.data.periodType, responseObj.data.timeToElapse, responseObj.data.region.avgDailyIncomePopulation, responseObj.data.region.avgDailyIncomeInUSD, responseObj.impact.infectionsByRequestedTime);
-  responseObj.severeImpact.dollarsInFlight = calculateDollarsInFlight(responseObj.data.periodType, responseObj.data.timeToElapse, responseObj.data.region.avgDailyIncomePopulation, responseObj.data.region.avgDailyIncomeInUSD, responseObj.severeImpact.infectionsByRequestedTime);
-
-  console.log('running'+JSON.stringify(responseObj));
+  responseObj.impact.hospitalBedsByRequestedTime = calculcateRequestedBeds(
+    responseObj.impact.severeCasesByRequestedTime, data.totalHospitalBeds
+  );
+  responseObj.severeImpact.hospitalBedsByRequestedTime = calculcateRequestedBeds(
+    responseObj.severeImpact.severeCasesByRequestedTime, data.totalHospitalBeds
+  );
+  responseObj.impact.casesForICUByRequestedTime = calculatecasesForICU(
+    responseObj.impact.infectionsByRequestedTime
+  );
+  responseObj.severeImpact.casesForICUByRequestedTime = calculatecasesForICU(
+    responseObj.severeImpact.infectionsByRequestedTime
+  );
+  responseObj.impact.casesForVentilatorsByRequestedTime = calculateVentilatorCases(
+    responseObj.impact.casesForICUByRequestedTime
+  );
+  responseObj.severeImpact.casesForVentilatorsByRequestedTime = calculateVentilatorCases(
+    responseObj.severeImpact.casesForICUByRequestedTime
+  );
+  responseObj.impact.dollarsInFlight = calculateDollarsInFlight(
+    responseObj.data.periodType, responseObj.data.timeToElapse,
+    responseObj.data.region.avgDailyIncomePopulation,
+    responseObj.data.region.avgDailyIncomeInUSD, responseObj.impact.infectionsByRequestedTime
+  );
+  responseObj.severeImpact.dollarsInFlight = calculateDollarsInFlight(
+    responseObj.data.periodType, responseObj.data.timeToElapse,
+    responseObj.data.region.avgDailyIncomePopulation, responseObj.data.region.avgDailyIncomeInUSD,
+    responseObj.severeImpact.infectionsByRequestedTime
+  );
   return responseObj;
 };
 
@@ -135,21 +155,19 @@ const createTable = (responseObj) => {
   tableRow.appendChild(dataHeader);
   tHead.appendChild(tableRow);
   table.appendChild(tHead);
-  const dataKeys = Object.keys(responseObj);
-  console.log(dataKeys);
   const { data, impact, severeImpact } = responseObj;
   const tBody = document.createElement('tbody');
   createTd(data.region, tBody);
   createTd(impact, tBody);
   createTd(severeImpact, tBody);
   table.appendChild(tBody);
-  table.setAttribute("id", "data-table");
+  table.setAttribute('id', 'data-table');
   return table;
 };
 
 const createTd = (input, tdBody) => {
-  // eslint-disable-next-line no-plusplus
   const respData = Object.keys(input);
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < respData.length; i++) {
     const tdRow = document.createElement('tr');
     const dtLabel = document.createElement('td');
