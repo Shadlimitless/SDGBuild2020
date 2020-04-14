@@ -1,20 +1,17 @@
 // Function used to normalize multiplier based on days, weeks or months
 const calculateEstimateForTime = (periodType, time) => {
-  let multiplier;
-  switch (periodType){
-    case "days":
-      multiplier = Math.pow(2, Math.round(time/3));
-      break;
-    case "weeks":
-      const numOfDays = time*7;
-      multiplier = Math.pow(2, Math.round(numOfDays/3));
-      break;
-    case "months":
-      const totalDays = time*30;
-      multiplier = Math.pow(2, Math.round(totalDays/3));
-      break;
-  }
-  return multiplier;
+    let totalDays = periodToDaysConvertor(periodType, time);
+    return Math.pow(2, Math.round(totalDays/3));
+}
+
+const periodToDaysConvertor= (periodType, time) =>{
+    if(periodType === "weeks"){
+        return time*7;
+    } else if(periodType === "months"){
+        return time*30;
+    } else {
+        return time;
+    }
 }
 
 //Function used to calculate the requestedInfections and check if they surpass the population
@@ -28,12 +25,22 @@ const calculateInfectionsByTime = (periodType, timeToElapse, population, current
     }
 }
 
-const calculateSevereCases = infections => Math.floor(infections * 0.15);
+const calculateSevereCases = (infections) => Math.floor(infections * 0.15);
 
 //Function used to calculate number of requested beds
 const calculcateRequestedBeds = (severeCases, hospitalBeds) => {
     let availableBeds = Math.floor(hospitalBeds*.35);
     return availableBeds - severeCases;
+}
+
+const calculatecasesForICU = (infectionsByRequestedTime) => infectionsByRequestedTime * 0.05;
+
+const calculateVentilatorCases = (ICUCases) => ICUCases * 0.02;
+
+const calculateDollarsInFlight = (periodType, time, avgPopulation, avIncome, infectionsByRequestedTime) =>{
+    console.log(arguments[3]);
+    let totalDays = periodToDaysConvertor(periodType, time);
+    return (infectionsByRequestedTime * avgPopulation) * avIncome * totalDays;
 }
 
 const covid19ImpactEstimator = (data) => {
@@ -51,10 +58,13 @@ const covid19ImpactEstimator = (data) => {
   responseObj.severeImpact.severeCasesByRequestedTime = calculateSevereCases(responseObj.severeImpact.infectionsByRequestedTime);
   responseObj.impact.hospitalBedsByRequestedTime = calculcateRequestedBeds(responseObj.impact.severeCasesByRequestedTime, data.totalHospitalBeds);
   responseObj.severeImpact.hospitalBedsByRequestedTime = calculcateRequestedBeds(responseObj.severeImpact.severeCasesByRequestedTime, data.totalHospitalBeds);
-  responseObj.impact.casesForICUByRequestedTime = responseObj.impact.infectionsByRequestedTime * 0.05;
-  responseObj.severeImpact.casesForICUByRequestedTime = responseObj.severeImpact.infectionsByRequestedTime * 0.05;
-  responseObj.impact.casesForVentilatorsByRequestedTime = responseObj.impact.casesForICUByRequestedTime * 0.02;
-  responseObj.severeImpact.casesForVentilatorsByRequestedTime = responseObj.severeImpact.casesForICUByRequestedTime * 0.02;
+  responseObj.impact.casesForICUByRequestedTime = calculatecasesForICU(responseObj.impact.infectionsByRequestedTime);
+  responseObj.severeImpact.casesForICUByRequestedTime = calculatecasesForICU(responseObj.severeImpact.infectionsByRequestedTime);
+  responseObj.impact.casesForVentilatorsByRequestedTime = calculateVentilatorCases(responseObj.impact.casesForICUByRequestedTime);
+  responseObj.severeImpact.casesForVentilatorsByRequestedTime = calculateVentilatorCases(responseObj.severeImpact.casesForICUByRequestedTime);
+  responseObj.impact.dollarsInFlight = calculateDollarsInFlight(data.periodType, data.timeToElapse, data.region.avgDailyIncomePopulation, data.region.avgDailyIncomeInUSD, responseObj.impact.infectionsByRequestedTime);
+  responseObj.severeImpact.dollarsInFlight = calculateDollarsInFlight(data.periodType, data.timeToElapse, data.region.avgDailyIncomePopulation, data.region.avgDailyIncomeInUSD, responseObj.severeImpact.infectionsByRequestedTime);
+
   console.log('running');
   return responseObj;
 };
