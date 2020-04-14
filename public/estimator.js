@@ -1,9 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /* eslint-disable no-restricted-properties */
@@ -180,5 +176,3 @@ var createTd = function createTd(input, tdBody) {
     tdBody.appendChild(tdRow);
   }
 };
-
-exports.default = covid19ImpactEstimator;
