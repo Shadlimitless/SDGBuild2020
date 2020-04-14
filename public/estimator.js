@@ -121,53 +121,47 @@ var covid19ImpactEstimator = function covid19ImpactEstimator(data) {
 
 var createTable = function createTable(responseObj) {
   var table = document.createElement('table');
+  table.setAttribute('class', 'table');
+  table.setAttribute('class', 'table-striped');
+  var tHead = document.createElement('thead');
   var tableRow = document.createElement('tr');
   var textHeader = document.createElement('th');
+  textHeader.setAttribute('scope', 'col');
   textHeader.innerHTML = 'Label';
   var dataHeader = document.createElement('th');
+  dataHeader.setAttribute('scope', 'col');
   dataHeader.innerHTML = 'Value';
   tableRow.appendChild(textHeader);
   tableRow.appendChild(dataHeader);
-  table.appendChild(tableRow);
+  tHead.appendChild(tableRow);
+  table.appendChild(tHead);
   var dataKeys = Object.keys(responseObj);
   console.log(dataKeys);
   var data = responseObj.data,
       impact = responseObj.impact,
       severeImpact = responseObj.severeImpact;
 
-  createTd(data, table);
-  createTd(impact, table);
-  createTd(severeImpact, table);
+  var tBody = document.createElement('tbody');
+  createTd(data.region, tBody);
+  createTd(impact, tBody);
+  createTd(severeImpact, tBody);
+  table.appendChild(tBody);
   table.setAttribute("id", "data-table");
   return table;
 };
 
-var createTd = function createTd(input, table) {
+var createTd = function createTd(input, tdBody) {
   // eslint-disable-next-line no-plusplus
   var respData = Object.keys(input);
   for (var i = 0; i < respData.length; i++) {
     var tdRow = document.createElement('tr');
-    if (respData[i] === 'region') {
-      console.log('passing once');
-      var regionData = input.region;
-      var regionArr = Object.keys(regionData);
-      for (var j = 0; j < regionArr.length; j++) {
-        var dtLabel = document.createElement('td');
-        dtLabel.innerHTML = regionArr[i];
-        var dtValue = document.createElement('td');
-        dtValue.innerHTML = regionData[regionArr[i]];
-        tdRow.appendChild(dtLabel);
-        tdRow.appendChild(dtValue);
-      }
-    } else {
-      var _dtLabel = document.createElement('td');
-      _dtLabel.innerHTML = respData[i];
-      var _dtValue = document.createElement('td');
-      _dtValue.innerHTML = input[respData[i]];
-      tdRow.appendChild(_dtLabel);
-      tdRow.appendChild(_dtValue);
-    }
-    table.appendChild(tdRow);
+    var dtLabel = document.createElement('td');
+    dtLabel.innerHTML = respData[i];
+    var dtValue = document.createElement('td');
+    dtValue.innerHTML = input[respData[i]];
+    tdRow.appendChild(dtLabel);
+    tdRow.appendChild(dtValue);
+    tdBody.appendChild(tdRow);
   }
 };
 

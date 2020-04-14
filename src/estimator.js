@@ -121,50 +121,44 @@ const covid19ImpactEstimator = (data) => {
 
 const createTable = (responseObj) => {
   const table = document.createElement('table');
+  table.setAttribute('class', 'table');
+  table.setAttribute('class', 'table-striped');
+  const tHead = document.createElement('thead');
   const tableRow = document.createElement('tr');
   const textHeader = document.createElement('th');
+  textHeader.setAttribute('scope', 'col');
   textHeader.innerHTML = 'Label';
   const dataHeader = document.createElement('th');
+  dataHeader.setAttribute('scope', 'col');
   dataHeader.innerHTML = 'Value';
   tableRow.appendChild(textHeader);
   tableRow.appendChild(dataHeader);
-  table.appendChild(tableRow);
+  tHead.appendChild(tableRow);
+  table.appendChild(tHead);
   const dataKeys = Object.keys(responseObj);
   console.log(dataKeys);
   const { data, impact, severeImpact } = responseObj;
-  createTd(data, table);
-  createTd(impact, table);
-  createTd(severeImpact, table);
+  const tBody = document.createElement('tbody');
+  createTd(data.region, tBody);
+  createTd(impact, tBody);
+  createTd(severeImpact, tBody);
+  table.appendChild(tBody);
   table.setAttribute("id", "data-table");
   return table;
 };
 
-const createTd = (input, table) => {
+const createTd = (input, tdBody) => {
   // eslint-disable-next-line no-plusplus
   const respData = Object.keys(input);
   for (let i = 0; i < respData.length; i++) {
     const tdRow = document.createElement('tr');
-    if (respData[i] === 'region') {
-      console.log('passing once');
-      const regionData = input.region;
-      const regionArr = Object.keys(regionData);
-      for (let j = 0; j < regionArr.length; j++) {
-        const dtLabel = document.createElement('td');
-        dtLabel.innerHTML = regionArr[i];
-        const dtValue = document.createElement('td');
-        dtValue.innerHTML = regionData[regionArr[i]];
-        tdRow.appendChild(dtLabel);
-        tdRow.appendChild(dtValue);
-      }
-    } else {
-      const dtLabel = document.createElement('td');
-      dtLabel.innerHTML = respData[i];
-      const dtValue = document.createElement('td');
-      dtValue.innerHTML = input[respData[i]];
-      tdRow.appendChild(dtLabel);
-      tdRow.appendChild(dtValue);
-    }
-    table.appendChild(tdRow);
+    const dtLabel = document.createElement('td');
+    dtLabel.innerHTML = respData[i];
+    const dtValue = document.createElement('td');
+    dtValue.innerHTML = input[respData[i]];
+    tdRow.appendChild(dtLabel);
+    tdRow.appendChild(dtValue);
+    tdBody.appendChild(tdRow);
   }
 };
 

@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>COVID-19 Simulator</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="./index.css" type="text/css"/>
@@ -9,24 +10,35 @@
     <body>
         <div class="main">
             <form>
-                <label for="data-population">Population</label>
-                <input type="number" id="data-population" name="data-population" placeholder="Population">
-                <label for="data-time-to-elapse">Time to Elapse</label>
-                <input type="number" id="data-time-to-elapse" name="data-time-to-elapse" placeholder="Time to elapse">
-                <label for="data-reported-cases">Currently report cases</label>
-                <input type="number" id="data-reported-cases" name="data-reported-cases" placeholder="Number of reported cases">
-                <label for="data-total-hospital-beds">Total Hospital Beds</label>
-                <input type="number" id="data-total-hospital-beds" name="data-total-hospital-beds" placeholder="Total number of hospital beds">
-                <label for="data-period-type">Select Time duration</label>
-                <select id="data-period-type" name="data-period-type">
-                    <option value="days">Days</option>
-                    <option value="weeks">Weeks</option>
-                    <option value="months">Months</option>
-                </select>
-                <input type="submit" value="Submit" id="data-go-estimate">
-            </form>
-            <div id="results"></div>
+                <div class="form-group">
+                    <label for="data-population">Population</label>
+                    <input type="number" class="form-control" id="data-population" name="data-population" placeholder="Population">
+                </div>
+                <div class="form-group">
+                    <label for="data-time-to-elapse">Time to Elapse</label>
+                    <input type="number" class="form-control" id="data-time-to-elapse" name="data-time-to-elapse" placeholder="Time to elapse">
+                </div>
+                <div class="form-group">
+                    <label for="data-reported-cases">Currently report cases</label>
+                    <input type="number" class="form-control" id="data-reported-cases" name="data-reported-cases" placeholder="Number of reported cases">
+                </div>
+                <div class="form-group">
+                    <label for="data-total-hospital-beds">Total Hospital Beds</label>
+                    <input type="number" class="form-control" id="data-total-hospital-beds" name="data-total-hospital-beds" placeholder="Total number of hospital beds">
+                </div>
+                <div class="form-group">
+                    <label for="data-period-type">Select Time duration</label>
+                    <select id="data-period-type" name="data-period-type" class="form-control">
+                        <option value="days">Days</option>
+                        <option value="weeks">Weeks</option>
+                        <option value="months">Months</option>
+                    </select>
+                </div> 
+                    <button type="submit" id="data-go-estimate" class="btn btn-primary">Submit</button>
+                </form>
+                </div>
         </div>
+        <div id="results" class="main"></div>
         <script src="estimator.js"></script>
     </body>
 </html>
