@@ -35,6 +35,11 @@ submitData.addEventListener('click', (e) => {
   // eslint-disable-next-line no-console
   console.log(`found data${JSON.stringify(inputData)}`);
   const result = document.getElementById('results');
+  const tableElem = document.getElementById('data-table');
+  // eslint-disable-next-line valid-typeof
+  if(typeof(tableElem)!= undefined && tableElem != null) {
+    tableElem.parentNode.removeChild(tableElem);
+  }
   result.appendChild(createTable(estimateData));
 });
 
@@ -130,6 +135,7 @@ const createTable = (responseObj) => {
   createTd(data, table);
   createTd(impact, table);
   createTd(severeImpact, table);
+  table.setAttribute("id", "data-table");
   return table;
 };
 

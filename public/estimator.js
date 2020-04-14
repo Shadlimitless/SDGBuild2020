@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 /* eslint-disable no-restricted-properties */
 /* eslint-disable no-use-before-define */
 // Function used to normalize multiplier based on days, weeks or months
@@ -36,6 +38,11 @@ submitData.addEventListener('click', function (e) {
   // eslint-disable-next-line no-console
   console.log('found data' + JSON.stringify(inputData));
   var result = document.getElementById('results');
+  var tableElem = document.getElementById('data-table');
+  // eslint-disable-next-line valid-typeof
+  if ((typeof tableElem === 'undefined' ? 'undefined' : _typeof(tableElem)) != undefined && tableElem != null) {
+    tableElem.parentNode.removeChild(tableElem);
+  }
   result.appendChild(createTable(estimateData));
 });
 
@@ -131,6 +138,7 @@ var createTable = function createTable(responseObj) {
   createTd(data, table);
   createTd(impact, table);
   createTd(severeImpact, table);
+  table.setAttribute("id", "data-table");
   return table;
 };
 
